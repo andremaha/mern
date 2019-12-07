@@ -35,7 +35,6 @@ router.post('/', [
 		try {
 
 			// See if user exits
-			
 			let user = await User.findOne({ email })
 
 			if (user) {
@@ -43,7 +42,6 @@ router.post('/', [
 			}
 
 			// Get users gravatar
-			
 			const avatar = gravatar.url(email, {
 				s: '200',
 				r: 'pg',
@@ -58,7 +56,6 @@ router.post('/', [
 			})
 
 			// Encrypt password
-			
 			const salt = await bcrypt.genSalt(10)
 
 			user.password = await bcrypt.hash(password, salt)
@@ -66,7 +63,6 @@ router.post('/', [
 			await user.save()
 
 			// Return jsonwebtoken
-			
 			const payload = {
 				user: {
 					id: user.id
