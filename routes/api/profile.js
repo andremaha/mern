@@ -251,7 +251,7 @@ router.delete('/experience/:exp_id', auth, async (req, res) => {
 		const profile = await Profile.findOne({ user: req.user.id })
 
 		if (!profile) {
-			return res.status(404).json({ errors: [ { message: 'No experience found' } ] })
+			return res.status(404).json({ errors: [ { message: 'No profile found' } ] })
 		}
 
 		const newExperiences = profile.experiences.filter((experience) => {
@@ -331,6 +331,35 @@ router.put('/education', [auth,
 			res.status(500).json({ errors: [ { message: err.message } ] })
 		}
 	})
+
+// @route 	DELETE 	api/profile/education/:edu_id
+// @desc 	Delete education from the profile
+// @access 	Private
+router.delete('/education/:edu_id', auth, async (req, res) => {
+	try {
+		const profile = await Profile.findOne({ user: req.user.id })
+
+		if (!profile) {
+			return res.status(404).json({ errors: [{ message: 'No profile found'} ]})
+		}
+
+		const newEducations = profile.education.filter((education) => {
+			if (education._id != req.params.edu_id) {
+				return education
+			}
+		})
+
+		profile.education = newEducations
+
+		await profile.save(profile)
+
+		return res.json(profile)
+
+	} catch(err) {
+		console.error(err.message)
+		res.status(500).json({ errors: [ { message: err.message } ] })
+	}
+})
 
 
 module.exports = router
